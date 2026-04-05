@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { Buffer } from "buffer";
 import { v4 as uuidv4 } from "uuid";
 
 export async function publishPost(formData: FormData) {
@@ -22,13 +21,14 @@ export async function publishPost(formData: FormData) {
   let thumbnailUrl: string | null = null;
 
   if (thumbnailFile) {
-    // Convert to Buffer
+    // Convert to Uint8Array for image processing
     const arrayBuffer = await thumbnailFile.arrayBuffer();
-    let buffer = Buffer.from(new Uint8Array(arrayBuffer));
+    let imageBuffer: Uint8Array = new Uint8Array(arrayBuffer);
+
     // Resize if larger than 2 MB
     if (thumbnailFile.size > 2 * 1024 * 1024) {
       const sharp = (await import("sharp")).default;
-      buffer = await sharp(buffer)
+      imageBuffer = await sharp(imageBuffer)
         .resize({ width: 1200, withoutEnlargement: true })
         .toBuffer();
     }
@@ -37,7 +37,7 @@ export async function publishPost(formData: FormData) {
     const fileName = `${uuidv4()}.${ext}`;
     const { error: uploadError } = await supabase.storage
       .from("thumbnails")
-      .upload(fileName, buffer, {
+      .upload(fileName, imageBuffer, {
         contentType: thumbnailFile.type,
         upsert: false,
       });
