@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import ShareButtons from "@/components/blog/ShareButtons";
 import DeleteButton from "./DeleteButton";
 import CommentSection from "@/components/blog/CommentSection";
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 
 export default async function BlogDetailPage({
   params,
@@ -94,8 +96,8 @@ export default async function BlogDetailPage({
         )}
 
         {/* Content */}
-        <div className="w-full text-left max-w-none text-zinc-800 dark:text-zinc-300 leading-loose text-lg whitespace-pre-wrap mb-16">
-          {contentToDisplay}
+        <div className="w-full text-left max-w-none text-zinc-900 dark:text-zinc-50 mb-16 prose dark:prose-invert prose-zinc max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkBreaks]}>{contentToDisplay}</ReactMarkdown>
         </div>
 
         {/* Admin Actions */}

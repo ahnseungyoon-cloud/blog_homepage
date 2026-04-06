@@ -1,6 +1,12 @@
 import BlogSection from "@/components/home/BlogSection";
+import Link from "next/link";
 
-export default function Home() {
+import { createClient } from "@/utils/supabase/server";
+
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
@@ -14,6 +20,13 @@ export default function Home() {
             프론트엔드 개발, 회고, 기술 팁 등을 공유하는 블로그입니다.
             현재 Next.js App Router와 Supabase를 활용하여 구성되었습니다.
           </p>
+          {user && (
+            <div className="mt-10 flex gap-4">
+              <Link href="/write" className="px-8 py-4 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-500/25">
+                지금 바로 글 작성하기
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 

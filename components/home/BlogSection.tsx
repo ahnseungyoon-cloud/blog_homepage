@@ -46,8 +46,8 @@ export default function BlogSection() {
       if (!error && data) {
         setPosts(data as Post[]);
         setTotalPosts(count || 0);
-      } else {
-        console.error("Error fetching posts:", error);
+      } else if (error) {
+        console.error("Error fetching posts:", error.message, error.details, error.hint);
       }
       
       setLoading(false);
