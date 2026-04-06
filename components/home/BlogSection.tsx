@@ -22,9 +22,13 @@ export default function BlogSection() {
       setLoading(true);
       
       // Fetch Categories
-      const { data: categoryData } = await supabase.from("categories").select("name").order("created_at");
+      const { data: categoryData } = await supabase
+        .from("categories")
+        .select("name")
+        .order("created_at");
+        
       if (categoryData) {
-        setCategories(["All", ...categoryData.map(c => c.name)]);
+        setCategories(["All", ...categoryData.map((c: { name: string }) => c.name)]);
       }
 
       // Fetch Posts
