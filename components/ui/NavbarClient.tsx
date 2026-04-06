@@ -15,7 +15,7 @@ export default function NavbarClient({ initialUser }: { initialUser: any }) {
   }, [initialUser]);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session) => {
       if (session?.user?.id !== user?.id) {
         setUser(session?.user || null);
         router.refresh(); // Trigger server-side re-render of layout
