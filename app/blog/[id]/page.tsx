@@ -96,23 +96,42 @@ export default async function BlogDetailPage({
         )}
 
         {/* Content */}
-        <div className="w-full text-left max-w-none text-zinc-900 dark:text-zinc-50 mb-16 prose dark:prose-invert prose-zinc max-w-none">
-          <ReactMarkdown remarkPlugins={[remarkBreaks]}>{contentToDisplay}</ReactMarkdown>
+        <div className="w-full text-left blog-content prose dark:prose-invert prose-zinc max-w-none prose-img:rounded-2xl prose-img:mx-auto prose-p:leading-relaxed prose-p:text-lg dark:prose-p:text-zinc-300">
+          <ReactMarkdown 
+            remarkPlugins={[remarkBreaks]}
+            components={{
+              img: ({ node, ...props }) => (
+                <span className="block my-8">
+                  <img 
+                    {...props} 
+                    className="rounded-2xl w-full h-auto shadow-lg"
+                    style={{ maxHeight: '600px', objectFit: 'contain' }}
+                    loading="lazy"
+                  />
+                </span>
+              ),
+              p: ({ children }) => <p className="mb-6">{children}</p>,
+            }}
+          >
+            {contentToDisplay}
+          </ReactMarkdown>
         </div>
 
         {/* Admin Actions */}
         {isAuthor && (
-          <div className="w-full flex justify-end pt-8 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="w-full flex justify-end pt-8 mt-12 border-t border-zinc-200 dark:border-zinc-800">
             <DeleteButton id={post.id} />
           </div>
         )}
 
         {/* Comment Section */}
-        <CommentSection 
-          postId={post.id} 
-          initialComments={comments || []} 
-          currentUser={user ? { id: user.id, email: user.email } : null} 
-        />
+        <div className="w-full mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+          <CommentSection 
+            postId={post.id} 
+            initialComments={comments || []} 
+            currentUser={user ? { id: user.id, email: user.email } : null} 
+          />
+        </div>
       </div>
     </div>
   );
