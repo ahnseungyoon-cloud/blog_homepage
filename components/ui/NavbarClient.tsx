@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Session } from "@supabase/supabase-js";
 
 export default function NavbarClient({ initialUser }: { initialUser: any }) {
   const [user, setUser] = useState<any>(initialUser);
@@ -15,7 +16,7 @@ export default function NavbarClient({ initialUser }: { initialUser: any }) {
   }, [initialUser]);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: Session | null) => {
       if (session?.user?.id !== user?.id) {
         setUser(session?.user || null);
         router.refresh(); // Trigger server-side re-render of layout
@@ -37,8 +38,8 @@ export default function NavbarClient({ initialUser }: { initialUser: any }) {
           <Link href="/write" className="text-sm font-medium bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 px-4 py-2 rounded-full hover:opacity-90 transition">
             Write
           </Link>
-          <button 
-            onClick={handleLogout} 
+          <button
+            onClick={handleLogout}
             className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition"
           >
             Logout
